@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume | Personal Site</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/web/pdf_viewer.css">
+</head>
+<body>
+  <div class="page">
+    <header>
+      <nav class="top-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="projects.html">Projects</a>
+        <a href="activities.html">Activities</a>
+        <a class="active" href="resume.html">Resume</a>
+        <a href="writings.html">Writings</a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>Preview</h2>
+
+        <div class="resume-actions">
+          <a class="btn" href="./resume.pdf" download>Download resume.pdf</a>
+          <a class="btn btn-secondary" href="./resume.pdf" target="_blank" rel="noopener">Open in new tab</a>
+        </div>
+
+        <p id="pdf-fallback" class="note" style="display:none;">
+          Resume preview failed to load. Please use the download link above.
+        </p>
+
+        <div id="pdf-container" class="pdf-stack pdfViewer" aria-label="Resume PDF preview"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p class="footer-text">&copy; 2025 Tristan Yan-Klassen</p>
+    </footer>
+  </div>
+
+  <script type="module">
+    // Base PDF.js API
+    import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.mjs";
+    // Viewer-layer utilities (required for reliable annotation/link rendering in v4+)
+    import {
+      EventBus,
+      PDFLinkService,
+      LinkTarget,
+      AnnotationLayerBuilder
+    } from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/web/pdf_viewer.mjs";
+
+    const PDF_PATH = "./resume.pdf";
+    const MAX_WIDTH = 880;            // match your .page max-width
+    const RESIZE_DEBOUNCE_MS = 150;
+    const RERENDER_EPS_PX = 5;
+
+    const container = document.getElementById("pdf-container");
+    const fallback = document.getElementById("pdf-fallback");
+
+    function showFallback(msg) {
+      if (fallback) {
+        fallback.textContent = msg || fallback.textContent;
+        fallback.style.display = "block";
+      }
+      if (container) container.innerHTML = "";
+    }
+
+    if (!container) {
+      showFallback("Resume preview failed (missing container).");
+      throw new Error("Missing #pdf-container");
+    }
+
+    // Worker (module build)
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.mjs";
+
+    const eventBus = new EventBus();
+    const linkService = new PDFLinkService({
+      eventBus,
+      externalLinkTarget: LinkTarget.BLANK,
+    });
+
+    let lastWidth = 0;
+    let resizeTimer = null;
+    let renderToken = 0; // cancel stale renders
+
+    function getRenderWidth() {
+      const host = document.querySelector(".page") || document.querySelector("main") || document.body;
+      const w = host?.clientWidth || window.innerWidth;
+      return Math.min(w, MAX_WIDTH);
+    }
+
+    async function headCheck(url) {
+      const r = await fetch(url, { method: "HEAD", cache: "no-store" });
+      if (!r.ok) throw new Error(`PDF HTTP ${r.status}`);
+    }
+
+    async function renderPdf(force = false) {
+        const token = ++renderToken;
+
+        try {
+            const renderWidth = getRenderWidth();
+            if (!isFinite(renderWidth) || renderWidth <= 0) throw new Error("Bad layout width");
+
+            if (!force && Math.abs(renderWidth - lastWidth) < RERENDER_EPS_PX) return;
+            lastWidth = renderWidth;
+
+            await headCheck(PDF_PATH);
+
+            const pdf = await pdfjsLib.getDocument({ url: PDF_PATH }).promise;
+            if (token !== renderToken) return;
+
+            // Clear and render
+            container.innerHTML = "";
+            if (fallback) fallback.style.display = "none";
+
+            const annotationStorage = pdf.annotationStorage || new pdfjsLib.AnnotationStorage();
+            const dpr = window.devicePixelRatio || 1;
+
+            // Keep refs to page wrappers so internal links can scroll
+            const pageWraps = new Array(pdf.numPages + 1);
+
+            // IMPORTANT: PDFLinkService needs a "viewer"
+            linkService.setViewer({
+            // PDFLinkService checks this
+            isInPresentationMode: false,
+
+            // Used for internal link navigation
+            get pagesCount() { return pdf.numPages; },
+            get currentPageNumber() { return 1; },
+            set currentPageNumber(_) {},
+
+            scrollPageIntoView: ({ pageNumber }) => {
+                const el = pageWraps[pageNumber];
+                if (el) el.scrollIntoView({ block: "start", behavior: "smooth" });
+            },
+            });
+
+            // Set document AFTER setViewer
+            linkService.setDocument(pdf);
+
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            if (token !== renderToken) return;
+
+            const page = await pdf.getPage(pageNum);
+
+            const unscaled = page.getViewport({ scale: 1, rotation: page.rotate || 0 });
+            const scale = renderWidth / unscaled.width;
+            if (!isFinite(scale) || scale <= 0) throw new Error("Bad scale");
+
+            const viewport = page.getViewport({ scale, rotation: page.rotate || 0 });
+            const renderViewport = viewport.clone({ scale: viewport.scale * dpr });
+
+            const pageWrap = document.createElement("div");
+            pageWrap.className = "pdf-page";
+            pageWrap.style.position = "relative";
+            pageWrap.style.width = `${viewport.width}px`;
+            pageWrap.style.height = `${viewport.height}px`;
+            container.appendChild(pageWrap);
+            pageWraps[pageNum] = pageWrap;
+
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d", { alpha: false });
+            canvas.width = Math.floor(renderViewport.width);
+            canvas.height = Math.floor(renderViewport.height);
+            canvas.style.width = `${viewport.width}px`;
+            canvas.style.height = `${viewport.height}px`;
+            canvas.style.display = "block";
+            canvas.style.position = "absolute";
+            canvas.style.left = "0";
+            canvas.style.top = "0";
+            canvas.style.zIndex = "0";
+            pageWrap.appendChild(canvas);
+
+            await page.render({ canvasContext: ctx, viewport: renderViewport }).promise;
+
+            const ann = new AnnotationLayerBuilder({
+                pageDiv: pageWrap,
+                pdfPage: page,
+                linkService,
+                annotationStorage,
+                renderForms: true,
+            });
+
+            await ann.render(viewport);
+
+            const annDiv = pageWrap.querySelector(".annotationLayer");
+            if (annDiv) {
+                annDiv.style.position = "absolute";
+                annDiv.style.left = "0";
+                annDiv.style.top = "0";
+                annDiv.style.width = `${viewport.width}px`;
+                annDiv.style.height = `${viewport.height}px`;
+                annDiv.style.zIndex = "1";
+                annDiv.style.pointerEvents = "auto";
+            }
+            }
+        } catch (err) {
+            console.error(err);
+            showFallback(`Resume preview failed: ${err?.message || String(err)}`);
+        }
+        }
+
+
+    renderPdf(true);
+
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => renderPdf(false), RESIZE_DEBOUNCE_MS);
+    });
+  </script>
+</body>
+</html>

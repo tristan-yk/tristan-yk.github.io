@@ -1,56 +1,307 @@
+:root {
+  --bg: #3a3635;      /* primary */
+  --fg: #f2efee;
+  --muted: #cbc6c5;
+  --border: #2d2a29;
+  --accent: #c6c2c1;  /* secondary (grayscale) */
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
 }
 
 body {
-    background-color: #121212;
-    color: #e0e0e0;
-    line-height: 1.6;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Segoe UI", "SF Pro Display", system-ui, -apple-system, sans-serif;
+  line-height: 1.7;
+  padding: 32px 20px 60px;
+  min-height: 100vh;
+  overflow-y: scroll; /* keep layout width stable between pages */
 }
 
-.container {
-    width: 80%;
-    margin: auto;
-    padding: 20px;
+/* Centered column */
+.page {
+  max-width: 880px;
+  margin: 0 auto;
 }
 
-header, footer {
-    text-align: center;
-    padding: 20px 0;
+/* Header / nav */
+header {
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border);
 }
 
-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+.top-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  padding: 14px 0;
 }
 
+.top-nav a {
+  color: var(--fg);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.top-nav a:hover,
+.top-nav a:focus-visible {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.top-nav a.active {
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--fg);
+}
+
+.top-nav a.active:hover,
+.top-nav a.active:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border);
+  color: var(--fg);
+}
+
+/* Main layout */
 main {
-    margin: 30px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.lede {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+/* Sections */
+section {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+section:last-of-type {
+  border-bottom: none;
 }
 
 h2 {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+p,
+li {
+  color: var(--fg);
 }
 
 p {
-    margin-bottom: 1rem;
+  margin-bottom: 10px;
 }
 
-footer p {
-    font-size: 0.9rem;
-    opacity: 0.7;
+ul {
+  list-style: disc;
+  padding-left: 20px;
 }
 
+/* Global links (site chrome + content) */
 a {
-    color: #bb86fc;
-    text-decoration: none;
-    transition: color 0.3s ease;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-a:hover {
-    color: #3700b3;
+a:hover,
+a:focus-visible {
+  color: #b3ecff; /* temporary hover tint; change later */
+}
+
+/* Utility blocks */
+.note {
+  display: inline-block;
+  padding: 10px 12px;
+  border: 1px dashed var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  border-radius: 10px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+}
+
+/* Buttons (used on resume page, optional elsewhere) */
+.resume-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  border-color: color-mix(in srgb, var(--border), var(--fg) 25%);
+}
+
+.btn.btn-secondary {
+  background: transparent;
+}
+
+/* Legacy inline PDF embed (if you ever use <iframe>) */
+.pdf-inline {
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  background: var(--bg);
+  display: block;
+}
+
+/* ===========================
+   PDF.js stacked preview
+   IMPORTANT: Do NOT disable pointer-events on .annotationLayer.
+   PDF.js uses it for clickable links.
+   =========================== */
+
+.pdf-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-height: 240px;
+}
+
+/* PDFPageView (pdf_viewer.css) will inject a .page container.
+   Keep our wrapper simple; let PDF.js manage the annotation/text layers. */
+.pdf-page {
+  width: 100%;
+  position: relative;
+  background: #fff;
+  overflow: visible;
+}
+
+/* Make the rendered canvas responsive and visually consistent */
+.pdf-page canvas {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+/* Optional: if you want a subtle separation between pages without changing PDF.js layout */
+.pdf-page:not(:last-child) {
+  padding-bottom: 0;
+}
+
+.pdfViewer .page {
+  margin: 0 auto 8px auto !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border: 1px solid var(--border) !important;
+  background: #fff !important;
+  overflow: visible !important;
+}
+
+.pdfViewer .canvasWrapper {
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+/* Ensure the PDF.js layers can receive clicks */
+.annotationLayer {
+  pointer-events: auto; /* allow link clicks */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Some adblockers / CSS resets can interfere; ensure anchor hitboxes remain clickable */
+.annotationLayer a {
+  pointer-events: auto;
+}
+
+/* Keep the PDF.js link overlay invisible (PDF.js already styles these; this is just safety) */
+.annotationLayer .linkAnnotation > a {
+  background: transparent;
+  border: none;
+}
+
+.annotationLayer a:focus,
+.annotationLayer a:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Footer (if you have one) */
+footer {
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.footer-text {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  body {
+    padding: 24px 16px 48px;
+  }
+
+  .top-nav {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .page-title {
+    font-size: 1.6rem;
+  }
 }
