@@ -161,6 +161,24 @@ a:focus-visible {
   gap: 14px;
 }
 
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.hero-links ul {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.hero-links li {
+  color: var(--fg);
+}
+
 /* Buttons (used on resume page, optional elsewhere) */
 .resume-actions {
   display: flex;

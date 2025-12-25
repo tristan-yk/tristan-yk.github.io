@@ -1,12 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resume | Personal Site</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/web/pdf_viewer.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    canvas {
+      display: block;
+    }
+
+    .pdf-page {
+      position: relative;
+      background: transparent;
+      overflow: hidden;
+      margin-bottom: 18px; /* intentional grey gap */
+      line-height: 0;
+      border: 0;
+      outline: 0;
+      box-shadow: none;
+    }
+
+    /* Invisible clickable link overlays */
+    .link-overlay {
+      position: absolute;
+      z-index: 10;
+      background: transparent;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  </style>
 </head>
+
 <body>
   <div class="page">
     <header>
@@ -21,197 +48,151 @@
     </header>
 
     <main>
-      <section>
-        <h2>Preview</h2>
-
-        <div class="resume-actions">
-          <a class="btn" href="./resume.pdf" download>Download resume.pdf</a>
-          <a class="btn btn-secondary" href="./resume.pdf" target="_blank" rel="noopener">Open in new tab</a>
-        </div>
-
-        <p id="pdf-fallback" class="note" style="display:none;">
-          Resume preview failed to load. Please use the download link above.
-        </p>
-
-        <div id="pdf-container" class="pdf-stack pdfViewer" aria-label="Resume PDF preview"></div>
-      </section>
+      <p id="pdf-fallback" style="display:none;">Resume failed to load.</p>
+      <div id="pdf-container"></div>
     </main>
-
     <footer>
       <p class="footer-text">&copy; 2025 Tristan Yan-Klassen</p>
     </footer>
   </div>
 
   <script type="module">
-    // Base PDF.js API
     import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.mjs";
-    // Viewer-layer utilities (required for reliable annotation/link rendering in v4+)
-    import {
-      EventBus,
-      PDFLinkService,
-      LinkTarget,
-      AnnotationLayerBuilder
-    } from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/web/pdf_viewer.mjs";
 
     const PDF_PATH = "./resume.pdf";
-    const MAX_WIDTH = 880;            // match your .page max-width
-    const RESIZE_DEBOUNCE_MS = 150;
-    const RERENDER_EPS_PX = 5;
+    const MAX_WIDTH = 880;
+
+    /* ============================
+       MANUAL LINK OVERLAYS (FINAL)
+       ============================ */
+    const LINK_OVERLAYS = [
+      {
+        page: 1,
+        url: "mailto:tyanklas@uwaterloo.ca",
+        rect: [199, 716, 308, 732],
+      },
+      {
+        page: 1,
+        url: "https://tristan-yk.github.io/",
+        rect: [314, 716, 405, 732],
+      },
+      {
+        page: 1,
+        url: "https://linkedin.com/in/tristanyanklassen",
+        rect: [410, 716, 510, 732],
+      },
+    ];
 
     const container = document.getElementById("pdf-container");
     const fallback = document.getElementById("pdf-fallback");
 
-    function showFallback(msg) {
-      if (fallback) {
-        fallback.textContent = msg || fallback.textContent;
-        fallback.style.display = "block";
-      }
-      if (container) container.innerHTML = "";
-    }
-
-    if (!container) {
-      showFallback("Resume preview failed (missing container).");
-      throw new Error("Missing #pdf-container");
-    }
-
-    // Worker (module build)
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.mjs";
 
-    const eventBus = new EventBus();
-    const linkService = new PDFLinkService({
-      eventBus,
-      externalLinkTarget: LinkTarget.BLANK,
-    });
-
-    let lastWidth = 0;
-    let resizeTimer = null;
-    let renderToken = 0; // cancel stale renders
+    function fail(err) {
+      console.error(err);
+      fallback.style.display = "block";
+      container.innerHTML = "";
+    }
 
     function getRenderWidth() {
-      const host = document.querySelector(".page") || document.querySelector("main") || document.body;
-      const w = host?.clientWidth || window.innerWidth;
-      return Math.min(w, MAX_WIDTH);
+      return Math.min(
+        document.querySelector(".page")?.clientWidth ?? window.innerWidth,
+        MAX_WIDTH
+      );
     }
 
-    async function headCheck(url) {
-      const r = await fetch(url, { method: "HEAD", cache: "no-store" });
-      if (!r.ok) throw new Error(`PDF HTTP ${r.status}`);
+    function pdfRectToCss(viewport, rect) {
+      const [x1, y1, x2, y2] = rect;
+      const p1 = viewport.convertToViewportPoint(x1, y1);
+      const p2 = viewport.convertToViewportPoint(x2, y2);
+
+      const left = Math.min(p1[0], p2[0]);
+      const top = Math.min(p1[1], p2[1]);
+      const width = Math.abs(p2[0] - p1[0]);
+      const height = Math.abs(p2[1] - p1[1]);
+
+      return { left, top, width, height };
     }
 
-    async function renderPdf(force = false) {
-        const token = ++renderToken;
+    function addLinkOverlays(pageWrap, viewport, pageNum) {
+      LINK_OVERLAYS
+        .filter(o => o.page === pageNum)
+        .forEach(o => {
+          const css = pdfRectToCss(viewport, o.rect);
 
-        try {
-            const renderWidth = getRenderWidth();
-            if (!isFinite(renderWidth) || renderWidth <= 0) throw new Error("Bad layout width");
+          const a = document.createElement("a");
+          a.className = "link-overlay";
+          a.href = o.url;
+          a.target = "_blank";
+          a.rel = "noopener";
 
-            if (!force && Math.abs(renderWidth - lastWidth) < RERENDER_EPS_PX) return;
-            lastWidth = renderWidth;
+          a.style.left = `${css.left}px`;
+          a.style.top = `${css.top}px`;
+          a.style.width = `${css.width}px`;
+          a.style.height = `${css.height}px`;
 
-            await headCheck(PDF_PATH);
+          pageWrap.appendChild(a);
+        });
+    }
 
-            const pdf = await pdfjsLib.getDocument({ url: PDF_PATH }).promise;
-            if (token !== renderToken) return;
+    async function render() {
+      try {
+        const pdf = await pdfjsLib.getDocument(PDF_PATH).promise;
 
-            // Clear and render
-            container.innerHTML = "";
-            if (fallback) fallback.style.display = "none";
+        container.innerHTML = "";
+        fallback.style.display = "none";
 
-            const annotationStorage = pdf.annotationStorage || new pdfjsLib.AnnotationStorage();
-            const dpr = window.devicePixelRatio || 1;
+        const dpr = window.devicePixelRatio || 1;
+        const renderWidth = getRenderWidth();
 
-            // Keep refs to page wrappers so internal links can scroll
-            const pageWraps = new Array(pdf.numPages + 1);
+        for (let n = 1; n <= pdf.numPages; n++) {
+          const page = await pdf.getPage(n);
+          const unscaled = page.getViewport({ scale: 1 });
 
-            // IMPORTANT: PDFLinkService needs a "viewer"
-            linkService.setViewer({
-            // PDFLinkService checks this
-            isInPresentationMode: false,
+          // Integer CSS sizing to avoid seams
+          const scale0 = renderWidth / unscaled.width;
+          const cssW = Math.round(unscaled.width * scale0);
+          const cssH = Math.round(unscaled.height * scale0);
+          const scale = cssW / unscaled.width;
 
-            // Used for internal link navigation
-            get pagesCount() { return pdf.numPages; },
-            get currentPageNumber() { return 1; },
-            set currentPageNumber(_) {},
+          const viewport = page.getViewport({ scale });
+          const renderViewport = viewport.clone({ scale: viewport.scale * dpr });
 
-            scrollPageIntoView: ({ pageNumber }) => {
-                const el = pageWraps[pageNumber];
-                if (el) el.scrollIntoView({ block: "start", behavior: "smooth" });
-            },
-            });
+          const pageWrap = document.createElement("div");
+          pageWrap.className = "pdf-page";
+          pageWrap.style.width = `${cssW}px`;
+          pageWrap.style.height = `${cssH}px`;
+          container.appendChild(pageWrap);
 
-            // Set document AFTER setViewer
-            linkService.setDocument(pdf);
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d", { alpha: false });
 
-            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            if (token !== renderToken) return;
+          canvas.width = Math.floor(renderViewport.width);
+          canvas.height = Math.floor(renderViewport.height);
+          canvas.style.width = `${cssW}px`;
+          canvas.style.height = `${cssH}px`;
+          canvas.style.position = "absolute";
+          canvas.style.left = "0";
+          canvas.style.top = "0";
+          canvas.style.zIndex = "0";
 
-            const page = await pdf.getPage(pageNum);
+          pageWrap.appendChild(canvas);
 
-            const unscaled = page.getViewport({ scale: 1, rotation: page.rotate || 0 });
-            const scale = renderWidth / unscaled.width;
-            if (!isFinite(scale) || scale <= 0) throw new Error("Bad scale");
+          await page.render({
+            canvasContext: ctx,
+            viewport: renderViewport
+          }).promise;
 
-            const viewport = page.getViewport({ scale, rotation: page.rotate || 0 });
-            const renderViewport = viewport.clone({ scale: viewport.scale * dpr });
-
-            const pageWrap = document.createElement("div");
-            pageWrap.className = "pdf-page";
-            pageWrap.style.position = "relative";
-            pageWrap.style.width = `${viewport.width}px`;
-            pageWrap.style.height = `${viewport.height}px`;
-            container.appendChild(pageWrap);
-            pageWraps[pageNum] = pageWrap;
-
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d", { alpha: false });
-            canvas.width = Math.floor(renderViewport.width);
-            canvas.height = Math.floor(renderViewport.height);
-            canvas.style.width = `${viewport.width}px`;
-            canvas.style.height = `${viewport.height}px`;
-            canvas.style.display = "block";
-            canvas.style.position = "absolute";
-            canvas.style.left = "0";
-            canvas.style.top = "0";
-            canvas.style.zIndex = "0";
-            pageWrap.appendChild(canvas);
-
-            await page.render({ canvasContext: ctx, viewport: renderViewport }).promise;
-
-            const ann = new AnnotationLayerBuilder({
-                pageDiv: pageWrap,
-                pdfPage: page,
-                linkService,
-                annotationStorage,
-                renderForms: true,
-            });
-
-            await ann.render(viewport);
-
-            const annDiv = pageWrap.querySelector(".annotationLayer");
-            if (annDiv) {
-                annDiv.style.position = "absolute";
-                annDiv.style.left = "0";
-                annDiv.style.top = "0";
-                annDiv.style.width = `${viewport.width}px`;
-                annDiv.style.height = `${viewport.height}px`;
-                annDiv.style.zIndex = "1";
-                annDiv.style.pointerEvents = "auto";
-            }
-            }
-        } catch (err) {
-            console.error(err);
-            showFallback(`Resume preview failed: ${err?.message || String(err)}`);
+          addLinkOverlays(pageWrap, viewport, n);
         }
-        }
+      } catch (err) {
+        fail(err);
+      }
+    }
 
-
-    renderPdf(true);
-
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => renderPdf(false), RESIZE_DEBOUNCE_MS);
-    });
+    render();
+    window.addEventListener("resize", () => location.reload());
   </script>
 </body>
 </html>
