@@ -51,10 +51,12 @@ header {
   text-decoration: none;
   letter-spacing: 0.01em;
   font-weight: 600;
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-radius: 8px;
   transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
   border: 1px solid transparent;
+  min-width: 100px;
+  text-align: center;
 }
 
 .top-nav a:hover,
@@ -95,6 +97,17 @@ main {
   color: var(--muted);
 }
 
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.lead {
+  color: var(--muted);
+}
+
 /* Sections */
 section {
   padding: 18px 0;
@@ -103,6 +116,10 @@ section {
 
 section:last-of-type {
   border-bottom: none;
+}
+
+.section {
+  padding: 18px 0;
 }
 
 h2 {
@@ -156,9 +173,61 @@ a:focus-visible {
   background: rgba(255, 255, 255, 0.02);
 }
 
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.controls input,
+.controls select {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  padding: 8px 10px;
+  border-radius: 10px;
+  min-width: 180px;
+}
+
 .grid {
   display: grid;
   gap: 14px;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+}
+
+.list-item {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .hero-grid {
