@@ -393,4 +393,8 @@ footer {
   .page-title {
     font-size: 1.6rem;
   }
+
+  .top-nav a.nav-blog {
+    display: none;
+  }
 }
