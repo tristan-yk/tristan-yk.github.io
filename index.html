@@ -5,6 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | Tristan Yan-Klassen</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .contact-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 4px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-links .btn {
+            text-align: center;
+            display: block;
+        }
+
+        @media (max-width: 680px) {
+            .hero-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .hero-left {
+                order: 2;
+            }
+
+            .hero-right {
+                order: 1;
+            }
+
+            .contact-links {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .contact-links .btn {
+                text-align: left;
+                width: 100%;
+            }
+
+            .image-credit {
+                margin-top: 4px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="page">
@@ -14,68 +58,31 @@
                 <a href="about.html">About</a>
                 <a href="activities.html">Activities</a>
                 <a href="resume.html">Resume</a>
-                <a href="writings.html">Blog</a>
+                <a href="blog.html">Blog</a>
             </nav>
         </header>
         <main>
             <section class="section">
-                <div class="page-header">
-                    <h1 class="page-title">Welcome</h1>
-                    <p class="lead">Quick hello and some starting points. Customize this with your own info.</p>
-                </div>
-                <div class="hero-grid">
-                    <div>
-                        <p>TODO: Add a one-liner about who you are and what you're focused on.</p>
-                        <div class="tags" style="margin-top:10px;">
-                            <span class="tag">TODO: Focus</span>
-                            <span class="tag">TODO: Location</span>
-                            <span class="tag">TODO: Role</span>
-                        </div>
-                    </div>
-                    <div class="card hero-links">
-                        <h2>Links</h2>
-                        <ul>
-                            <li><a href="mailto:you@example.com">Email</a></li>
-                            <li><a href="https://github.com">GitHub</a></li>
-                            <li><a href="https://linkedin.com">LinkedIn</a></li>
-                            <li><a href="resume.pdf">Resume (PDF)</a></li>
+                <div class="hero-grid" style="grid-template-columns: 1.3fr 0.7fr;">
+                    <div class="hero-left" style="display:flex; flex-direction:column; gap:10px;">
+                        <h1 class="page-title" style="margin-bottom:5px;">Tristan Yan-Klassen</h1>
+                        <p class="lead" style="margin-bottom:15px;">
+                            Hello! I’m a Mechatronics Engineering student at the University of Waterloo. I have a passion for physics and robotics and love trying to reverse-engineer a system. I learn best by experimenting and tinkering and I am always looking to tackle a new challenge.
+                        </p>
+                        <ul class="contact-links">
+                            <li><a class="btn" href="https://www.linkedin.com/in/tristanyanklassen" target="_blank" rel="noopener">LinkedIn</a></li>
+                            <li><a class="btn" href="https://github.com/tristan-yk" target="_blank" rel="noopener">GitHub</a></li>
+                            <li><a class="btn" href="mailto:tyanklas@uwaterloo.ca" target="_blank" rel="noopener">Email</a></li>
+                            <li><a class="btn" href="https://www.instagram.com/tristan_yk_/" target="_blank" rel="noopener">Instagram</a></li>
                         </ul>
                     </div>
-                </div>
-            </section>
-
-            <section class="section">
-                <h2>Featured Work</h2>
-                <div class="cards">
-                    <div class="card">
-                        <p><strong>Project A</strong></p>
-                        <p>TODO: Brief summary and link.</p>
-                    </div>
-                    <div class="card">
-                        <p><strong>Project B</strong></p>
-                        <p>TODO: Brief summary and link.</p>
-                    </div>
-                    <div class="card">
-                        <p><strong>Project C</strong></p>
-                        <p>TODO: Brief summary and link.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section">
-                <h2>Recent Writing</h2>
-                <div class="list">
-                    <div class="list-item">
-                        <p><strong>Post title 1</strong> — TODO: add link and date.</p>
-                        <p class="lead">Short abstract goes here.</p>
-                    </div>
-                    <div class="list-item">
-                        <p><strong>Post title 2</strong> — TODO: add link and date.</p>
-                        <p class="lead">Short abstract goes here.</p>
-                    </div>
-                    <div class="list-item">
-                        <p><strong>Post title 3</strong> — TODO: add link and date.</p>
-                        <p class="lead">Short abstract goes here.</p>
+                    <div class="hero-right" style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-left:6px;">
+                        <div style="width:230px; max-width:100%; aspect-ratio:1; border-radius:50%; border:2px solid var(--border); overflow:hidden; position:relative;">
+                            <img src="profile.jpg"
+                                alt="Math Profile Picture"
+                                style="position:absolute; width:102%; height:102%; left:-1%; top:-1%; object-fit:cover;">
+                        </div>
+                        <p class="lead image-credit" style="font-size:0.9rem; color:var(--muted); text-align:center;">Image by 3Blue1Brown</p>
                     </div>
                 </div>
             </section>

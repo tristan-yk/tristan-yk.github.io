@@ -1,0 +1,21 @@
+<article>
+  <p class="lede">A tiny reading view for side projects is more about restraint than features.</p>
+
+  <h2>Constraints</h2>
+  <p>I capped the layout at 760px and kept typography at a relaxed 1.6–1.8 line height. Sidebars stay scrollable so the reading pane never jumps.</p>
+
+  <h2>Fetching Content</h2>
+  <p>The reader pulls local HTML files and injects them into the page. No markdown pipeline, no bundler. Just fetch, parse, and render.</p>
+
+  <pre><code>// fetch and parse the article
+const res = await fetch("posts/example.html");
+const html = await res.text();
+const doc = new DOMParser().parseFromString(html, "text/html");
+article.innerHTML = doc.querySelector("article").innerHTML;</code></pre>
+
+  <h3>Why keep it simple?</h3>
+  <p>Because it removes friction. I can drop any HTML snippet into <code>/posts</code> and it is live instantly.</p>
+
+  <h2>Next</h2>
+  <p>Experiment with a “focus” toggle that hides everything but the reading pane for long-form essays.</p>
+</article>

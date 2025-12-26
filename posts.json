@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Building a Tiny Reader",
+    "date": "2025-02-10T00:00:00.000Z",
+    "slug": "tiny-reader",
+    "tags": ["frontend", "UX"],
+    "excerpt": "Notes on designing a lightweight reading experience for side projects.",
+    "htmlPath": "posts/tiny-reader.html"
+  },
+  {
+    "title": "Designing Calm Interfaces",
+    "date": "2024-12-02T00:00:00.000Z",
+    "slug": "calm-interfaces",
+    "tags": ["design", "practice"],
+    "excerpt": "Guidelines I use to keep interfaces quiet but clear.",
+    "htmlPath": "posts/calm-interfaces.html"
+  },
+  {
+    "title": "Weeknotes: Winter Sprint",
+    "date": "2024-11-12T00:00:00.000Z",
+    "slug": "weeknotes-winter",
+    "tags": ["notes", "personal"],
+    "excerpt": "What I shipped, what broke, and what's next.",
+    "htmlPath": "posts/weeknotes-winter.html"
+  }
+]

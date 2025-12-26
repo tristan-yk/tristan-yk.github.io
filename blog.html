@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/writings.css">
+</head>
+<body>
+    <div class="page blog-page">
+        <header>
+            <nav class="top-nav">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="activities.html">Activities</a>
+                <a href="resume.html">Resume</a>
+                <a class="active" href="blog.html">Blog</a>
+            </nav>
+        </header>
+
+        <main>
+            <button id="articlesToggle" class="articles-toggle" aria-expanded="false" aria-controls="postDrawer">
+                Articles
+            </button>
+
+            <div class="blog-layout">
+                <aside id="postDrawer" class="blog-sidebar" aria-label="Article list">
+                    <p class="sidebar-title">Blogposts</p>
+                    <div id="postIndex" class="post-index" tabindex="-1"></div>
+                </aside>
+
+                <div class="blog-content">
+                    <article id="articleShell" class="article-shell" aria-live="polite">
+                        <h1 id="articleTitle" class="article-title"></h1>
+                        <p id="articleDate" class="article-date"></p>
+                        <div id="articleBody" class="article-body"></div>
+                        <nav id="articleNav" class="article-nav">
+                            <a id="prevLink" class="article-nav-link" href="#" aria-label="Previous article">Previous</a>
+                            <a id="nextLink" class="article-nav-link" href="#" aria-label="Next article">Next</a>
+                        </nav>
+                    </article>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p class="footer-text">&copy; 2025 Tristan Yan-Klassen</p>
+        </footer>
+    </div>
+
+    <div id="drawerBackdrop" class="drawer-backdrop" hidden></div>
+
+    <script type="module" src="js/writings.js"></script>
+</body>
+</html>
