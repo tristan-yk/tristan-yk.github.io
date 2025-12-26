@@ -5,7 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | Tristan Yan-Klassen</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="thumb.png">
     <style>
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr;
+            gap: 18px;
+            grid-template-areas:
+                "name image"
+                "bio image"
+                "links image"
+                "links credit";
+            align-items: start;
+        }
+
+        .hero-name { grid-area: name; margin-bottom: 0; }
+        .hero-bio { grid-area: bio; margin-bottom: 12px; }
+        .hero-links { grid-area: links; }
+        .hero-image { grid-area: image; display:flex; flex-direction:column; align-items:center; gap:6px; margin-left:6px; }
+        .hero-credit { grid-area: credit; font-size:0.9rem; color:var(--muted); text-align:center; }
+
         .contact-links {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -22,25 +41,27 @@
 
         @media (max-width: 680px) {
             .hero-grid {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "name"
+                    "image"
+                    "credit"
+                    "bio"
+                    "links";
             }
 
-            .hero-left {
-                order: 2;
-            }
-
-            .hero-right {
-                order: 1;
+            .hero-name {
+                text-align: center;
+                margin-top: 0;
             }
 
             .contact-links {
-                display: flex;
-                flex-direction: column;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
                 gap: 8px;
             }
 
             .contact-links .btn {
-                text-align: left;
+                text-align: center;
                 width: 100%;
             }
 
@@ -50,39 +71,36 @@
         }
     </style>
 </head>
-<body>
+<body class="page-home">
     <div class="page">
         <header>
             <nav class="top-nav">
-                <a class="active" href="index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="resume.html">Resume</a>
+                <a class="active nav-home" href="index.html">Home</a>
+                <a class="nav-about" href="about.html">About</a>
+                <a class="nav-resume" href="resume.html">Resume</a>
                 <a class="nav-blog" href="blog.html">Blog</a>
             </nav>
         </header>
         <main>
             <section class="section">
-                <div class="hero-grid" style="grid-template-columns: 1.3fr 0.7fr;">
-                    <div class="hero-left" style="display:flex; flex-direction:column; gap:10px;">
-                        <h1 class="page-title" style="margin-bottom:5px;">Tristan Yan-Klassen</h1>
-                        <p class="lead" style="margin-bottom:15px;">
-                            Hello! I’m a Mechatronics Engineering student at the University of Waterloo. I have a passion for physics and robotics and love trying to reverse-engineer a system. I learn best by experimenting and tinkering and I am always looking to tackle a new challenge.
-                        </p>
-                        <ul class="contact-links">
-                            <li><a class="btn" href="https://www.linkedin.com/in/tristanyanklassen" target="_blank" rel="noopener">LinkedIn</a></li>
-                            <li><a class="btn" href="https://github.com/tristan-yk" target="_blank" rel="noopener">GitHub</a></li>
-                            <li><a class="btn" href="mailto:tyanklas@uwaterloo.ca" target="_blank" rel="noopener">Email</a></li>
-                            <li><a class="btn" href="https://www.instagram.com/tristan_yk_/" target="_blank" rel="noopener">Instagram</a></li>
-                        </ul>
-                    </div>
-                    <div class="hero-right" style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-left:6px;">
-                        <div style="width:230px; max-width:100%; aspect-ratio:1; border-radius:50%; border:2px solid var(--border); overflow:hidden; position:relative;">
+                <div class="hero-grid">
+                    <h1 class="page-title hero-name">Tristan Yan-Klassen</h1>
+                    <div class="hero-image">
+                        <div style="width:230px; max-width:100%; aspect-ratio:1; border-radius:50%; border:0; overflow:hidden; position:relative;">
                             <img src="profile.jpg"
                                 alt="Math Profile Picture"
                                 style="position:absolute; width:102%; height:102%; left:-1%; top:-1%; object-fit:cover;">
                         </div>
-                        <p class="lead image-credit" style="font-size:0.9rem; color:var(--muted); text-align:center;">Image by 3Blue1Brown</p>
                     </div>
+                    <p class="lead image-credit hero-credit">Image by 3Blue1Brown</p>
+                    <p class="lead hero-bio">
+                        Hello! I’m a Mechatronics Engineering student at the University of Waterloo. I have a passion for physics and robotics and love trying to reverse-engineer a system. I learn best by experimenting and tinkering and I am always looking to tackle a new challenge.
+                    </p>
+                    <ul class="contact-links hero-links">
+                        <li><a class="btn" href="https://www.linkedin.com/in/tristanyanklassen" target="_blank" rel="noopener">LinkedIn</a></li>
+                        <li><a class="btn" href="https://github.com/tristan-yk" target="_blank" rel="noopener">GitHub</a></li>
+                        <li><a class="btn" href="mailto:tyanklas@uwaterloo.ca" target="_blank" rel="noopener">Email</a></li>
+                    </ul>
                 </div>
             </section>
         </main>

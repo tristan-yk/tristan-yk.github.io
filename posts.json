@@ -1,10 +1,34 @@
 [
   {
-    "title": "Your Post Title",
+    "title": "Template Article",
+    "date": "2025-01-08T00:00:00.000Z",
+    "slug": "template-article",
+    "tags": ["template", "longform"],
+    "excerpt": "A sample long-form structure you can overwrite.",
+    "htmlPath": "posts/template-article.html"
+  },
+  {
+    "title": "Template Weeknote",
+    "date": "2025-01-07T00:00:00.000Z",
+    "slug": "template-weeknote",
+    "tags": ["template", "weeknote"],
+    "excerpt": "A weekly snapshot template with goals and highlights.",
+    "htmlPath": "posts/template-weeknote.html"
+  },
+  {
+    "title": "Template Notes",
+    "date": "2025-01-06T00:00:00.000Z",
+    "slug": "template-notes",
+    "tags": ["template", "notes"],
+    "excerpt": "Short notes format for quick concepts or references.",
+    "htmlPath": "posts/template-notes.html"
+  },
+  {
+    "title": "Placeholder Post",
     "date": "2025-01-01T00:00:00.000Z",
-    "slug": "your-post-slug",
-    "tags": ["tag1", "tag2"],
-    "excerpt": "Brief summary of your post.",
+    "slug": "placeholder",
+    "tags": ["placeholder"],
+    "excerpt": "Swap this out with your first real post.",
     "htmlPath": "posts/placeholder.html"
   }
 ]

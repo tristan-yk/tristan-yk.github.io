@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+    <title>Blog | Tristan Yan-Klassen</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/writings.css">
+    <link rel="icon" type="image/png" href="thumb.png">
 </head>
-<body>
+<body class="page-blog">
     <div class="page blog-page">
         <header>
             <nav class="top-nav">
-                <a href="index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="resume.html">Resume</a>
+                <a class="nav-home" href="index.html">Home</a>
+                <a class="nav-about" href="about.html">About</a>
+                <a class="nav-resume" href="resume.html">Resume</a>
                 <a class="active nav-blog" href="blog.html">Blog</a>
             </nav>
         </header>
@@ -25,7 +26,7 @@
 
             <div class="blog-layout">
                 <aside id="postDrawer" class="blog-sidebar" aria-label="Article list">
-                    <p class="sidebar-title">Blogposts</p>
+                    <h2 class="sidebar-title" style="margin-bottom: 8px;">Posts</h2>
                     <div id="postIndex" class="post-index" tabindex="-1"></div>
                 </aside>
 

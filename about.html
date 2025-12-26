@@ -3,40 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
+    <title>About | Tristan Yan-Klassen</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="thumb.png">
 </head>
-<body>
+<body class="page-about">
     <div class="page">
         <header>
             <nav class="top-nav">
-                <a href="index.html">Home</a>
-                <a class="active" href="about.html">About</a>
-                <a href="resume.html">Resume</a>
+                <a class="nav-home" href="index.html">Home</a>
+                <a class="active nav-about" href="about.html">About</a>
+                <a class="nav-resume" href="resume.html">Resume</a>
                 <a class="nav-blog" href="blog.html">Blog</a>
             </nav>
         </header>
         <main>
             <section>
-                <h1 class="page-title">About</h1>
-                <p class="lede">Use this page to explain who you are, what you care about, and what you are building toward.</p>
-            </section>
-            <section>
-                <h2>Profile</h2>
-                <p>TODO: Add a concise bio, your location, and the domains you work in.</p>
+                <h2>Background</h2>
+                <p class="lede">A snapshot of some of the things I've done and the things I like.</p>
             </section>
             <section>
                 <h2>Background</h2>
-                <p>TODO: Summarize past roles, education, and any highlights worth noting.</p>
+                <div class="cards">
+                    <div class="card">
+                        <h3>Physics Olympiads</h3>
+                        <p>I still train and solve physics olympiad problems to stay sharp and chase curious setups.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Coaching / Mentoring</h3>
+                        <p>I help younger students with physics and robotics sessions, share problem tricks, and keep them excited to learn.</p>
+                    </div>
+                    <div class="card">
+                        <h3>OPhO Problem Writing</h3>
+                        <p>I write and test problems for the OPhO, trying to balance creative setups with clean solutions.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Engineering Projects</h3>
+                        <p>I build small mechatronics experiments and hacky prototypes to see how ideas behave in the real world.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Robotics + Control</h3>
+                        <p>I tinker with sensors and control loops to make little robots move smoothly and predictably.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Writing</h3>
+                        <p>I jot down notes on what I'm learning and the dead ends along the way. This is a deliberately long string of placeholder text to check truncation: lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pulvinar, nisl at fermentum convallis, mi eros vulputate arcu, sed luctus nibh turpis et neque. Integer facilisis, tortor sed cursus dapibus, ligula lectus faucibus nunc, et condimentum sapien risus in ex.</p>
+                    </div>
+                </div>
             </section>
             <section>
                 <h2>Interests</h2>
-                <p>TODO: List the topics, tools, and communities you are currently exploring.</p>
+                <div class="cards">
+                    <div class="card">
+                        <h3>Topics I like</h3>
+                        <p>Olympiad physics, control-ish math, robotics puzzles, and how things move.</p>
+                    </div>
+                    <div class="card">
+                        <h3>How I learn</h3>
+                        <p>Build small experiments, write about the mess, then teach it back to someone else.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Tools I use</h3>
+                        <p>Notebooks and whiteboards, quick sims, microcontrollers, and plenty of duct-tape prototyping.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Communities</h3>
+                        <p>UW mechatronics cohort, physics/olympiad circles, and local robotics clubs.</p>
+                    </div>
+                </div>
             </section>
         </main>
+        <div id="cardModal" class="card-modal" hidden>
+            <div class="card-modal-dialog">
+                <div id="cardModalBody"></div>
+            </div>
+        </div>
         <footer>
             <p class="footer-text">&copy; 2025 Tristan Yan-Klassen</p>
         </footer>
     </div>
+    <script>
+        (() => {
+            const cards = document.querySelectorAll('.cards .card');
+            const modal = document.getElementById('cardModal');
+            const modalBody = document.getElementById('cardModalBody');
+            const body = document.body;
+            let modalOpen = false;
+
+            function scrollbarWidth() {
+                return window.innerWidth - document.documentElement.clientWidth;
+            }
+
+            function lockScrollForModal() {
+                document.documentElement.classList.add('modal-open');
+                body.classList.add('modal-open');
+            }
+
+            function unlockScrollForModal() {
+                document.documentElement.classList.remove('modal-open');
+                body.classList.remove('modal-open');
+            }
+
+            function unclampParagraphs(root) {
+                root.querySelectorAll('p').forEach(p => {
+                    p.style.display = 'block';
+                    p.style.webkitLineClamp = 'unset';
+                    p.style.webkitBoxOrient = 'unset';
+                    p.style.overflow = 'visible';
+                });
+            }
+
+            function openModal(card) {
+                modalBody.innerHTML = '';
+                const clone = card.cloneNode(true);
+                clone.classList.remove('card-clickable');
+                unclampParagraphs(clone);
+                modalBody.appendChild(clone);
+                modal.removeAttribute('hidden');
+                modal.classList.add('open');
+                lockScrollForModal();
+                if (!modalOpen) {
+                    history.pushState({ modalCard: true }, '');
+                }
+                modalOpen = true;
+            }
+
+            function closeModal() {
+                modal.classList.remove('open');
+                modal.setAttribute('hidden', '');
+                unlockScrollForModal();
+                modalOpen = false;
+            }
+
+            cards.forEach(card => {
+                card.classList.add('card-clickable');
+                card.addEventListener('click', () => openModal(card));
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+            });
+
+            window.addEventListener('popstate', () => {
+                if (modalOpen) {
+                    modal.classList.remove('open');
+                    modal.setAttribute('hidden', '');
+                    unlockScrollForModal();
+                    modalOpen = false;
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
