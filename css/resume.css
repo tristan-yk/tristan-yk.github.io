@@ -1,0 +1,23 @@
+canvas {
+  display: block;
+}
+
+.pdf-page {
+  position: relative;
+  background: transparent;
+  overflow: hidden;
+  margin-bottom: 18px; /* intentional grey gap */
+  line-height: 0;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+
+/* Invisible clickable link overlays */
+.link-overlay {
+  position: absolute;
+  z-index: 10;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+}

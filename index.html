@@ -4,72 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | Tristan Yan-Klassen</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home.css">
     <link rel="icon" type="image/png" href="thumb.png">
-    <style>
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1.3fr 0.7fr;
-            gap: 18px;
-            grid-template-areas:
-                "name image"
-                "bio image"
-                "links image"
-                "links credit";
-            align-items: start;
-        }
-
-        .hero-name { grid-area: name; margin-bottom: 0; }
-        .hero-bio { grid-area: bio; margin-bottom: 12px; }
-        .hero-links { grid-area: links; }
-        .hero-image { grid-area: image; display:flex; flex-direction:column; align-items:center; gap:6px; margin-left:6px; }
-        .hero-credit { grid-area: credit; font-size:0.9rem; color:var(--muted); text-align:center; }
-
-        .contact-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 4px;
-            list-style: none;
-            padding: 0;
-        }
-
-        .contact-links .btn {
-            text-align: center;
-            display: block;
-        }
-
-        @media (max-width: 680px) {
-            .hero-grid {
-                grid-template-columns: 1fr;
-                grid-template-areas:
-                    "name"
-                    "image"
-                    "credit"
-                    "bio"
-                    "links";
-            }
-
-            .hero-name {
-                text-align: center;
-                margin-top: 0;
-            }
-
-            .contact-links {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-                gap: 8px;
-            }
-
-            .contact-links .btn {
-                text-align: center;
-                width: 100%;
-            }
-
-            .image-credit {
-                margin-top: 4px;
-            }
-        }
-    </style>
 </head>
 <body class="page-home">
     <div class="page">
