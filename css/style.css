@@ -398,7 +398,15 @@ body.page-about .cards .card p {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin: 12px 0 16px;
+  margin: 0;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .resume-actions {
+    justify-content: center;
+  }
 }
 
 .btn {
@@ -409,6 +417,7 @@ body.page-about .cards .card p {
   background: rgba(255, 255, 255, 0.06);
   color: var(--fg);
   text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .btn:hover,
@@ -460,7 +469,16 @@ body.page-about .cards .card p {
 }
 
 .btn.btn-secondary {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg);
+  border: 2px solid color-mix(in srgb, var(--page-accent) 40%, transparent);
+}
+
+.btn.btn-secondary:hover,
+.btn.btn-secondary:focus-visible {
+  background: color-mix(in srgb, var(--page-accent) 70%, transparent);
+  border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
+  color: var(--bg);
 }
 
 /* Legacy inline PDF embed (if you ever use <iframe>) */
