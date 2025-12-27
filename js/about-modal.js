@@ -4,6 +4,7 @@
     const modalBody = document.getElementById('cardModalBody');
     const body = document.body;
     let modalOpen = false;
+    let activeCard = null;
 
     function scrollbarWidth() {
         return window.innerWidth - document.documentElement.clientWidth;
@@ -29,9 +30,13 @@
     }
 
     function openModal(card) {
+        if (activeCard) activeCard.classList.remove('card-active');
+        activeCard = card;
+        activeCard.classList.add('card-active');
         modalBody.innerHTML = '';
         const clone = card.cloneNode(true);
         clone.classList.remove('card-clickable');
+        clone.classList.remove('card-active');
         unclampParagraphs(clone);
         modalBody.appendChild(clone);
         modal.removeAttribute('hidden');
@@ -48,6 +53,10 @@
         modal.setAttribute('hidden', '');
         unlockScrollForModal();
         modalOpen = false;
+        if (activeCard) {
+            activeCard.classList.remove('card-active');
+            activeCard = null;
+        }
     }
 
     cards.forEach(card => {
@@ -64,10 +73,7 @@
 
     window.addEventListener('popstate', () => {
         if (modalOpen) {
-            modal.classList.remove('open');
-            modal.setAttribute('hidden', '');
-            unlockScrollForModal();
-            modalOpen = false;
+            closeModal();
         }
     });
 })();

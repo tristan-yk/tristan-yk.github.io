@@ -1,8 +1,8 @@
 :root {
-  --bg: #3a3635;      /* primary */
+  --bg: #2e2f34;      /* primary, subtle navy */
   --fg: #f2efee;
-  --muted: #cbc6c5;
-  --border: #2d2a29;
+  --muted: #ffffff;
+  --border: #2c2f35;
   --accent: #c6c2c1;  /* secondary (grayscale) */
   --page-accent: var(--accent);
   --page-accent-soft: rgba(198, 194, 193, 0.32);
@@ -19,6 +19,7 @@
   --accent-blog: #d6c6f0;
   --accent-blog-soft: rgba(214, 198, 240, 0.26);
   --accent-blog-strong: #e3d7f7;
+  --hover-fill-strength: 70%;
 }
 
 /* Page themes */
@@ -32,18 +33,21 @@ body.page-about {
   --page-accent: #9ddcc7;           /* aquamarine green */
   --page-accent-soft: rgba(157, 220, 199, 0.26);
   --page-accent-strong: #b7e6d6;
+  --hover-fill-strength: 78%;
 }
 
 body.page-resume {
   --page-accent: #fff9c4;           /* bright yellow */
   --page-accent-soft: rgba(255, 249, 196, 0.5);
   --page-accent-strong: #fffde7;
+  --hover-fill-strength: 78%;
 }
 
 body.page-blog {
   --page-accent: #d6c6f0;           /* lavender */
   --page-accent-soft: rgba(214, 198, 240, 0.26);
   --page-accent-strong: #e3d7f7;
+  --hover-fill-strength: 78%;
 }
 
 * {
@@ -130,7 +134,7 @@ body.page-blog header {
 .top-nav a:hover,
 .top-nav a:focus-visible {
   color: var(--bg);
-  background: color-mix(in srgb, var(--nav-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--nav-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--nav-accent) 60%, transparent);
 }
 
@@ -142,7 +146,7 @@ body.page-blog header {
 
 .top-nav a.active:hover,
 .top-nav a.active:focus-visible {
-  background: color-mix(in srgb, var(--nav-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--nav-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--nav-accent) 60%, transparent);
   color: var(--bg);
 }
@@ -275,9 +279,22 @@ a:focus-visible {
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
+.card-active {
+  background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
+  border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
+  color: var(--bg);
+}
+
+.card-active h3,
+.card-active p,
+.card-active li,
+.card-active .card-meta {
+  color: var(--bg);
+}
+
 @media (hover: hover) {
   .card-clickable:hover {
-    background: color-mix(in srgb, var(--page-accent) 70%, transparent);
+    background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
     border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
     color: var(--bg);
   }
@@ -422,7 +439,7 @@ body.page-about .cards .card p {
 
 .btn:hover,
 .btn:focus-visible {
-  background: color-mix(in srgb, var(--page-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
   color: var(--bg);
 }
@@ -476,7 +493,7 @@ body.page-about .cards .card p {
 
 .btn.btn-secondary:hover,
 .btn.btn-secondary:focus-visible {
-  background: color-mix(in srgb, var(--page-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
   color: var(--bg);
 }

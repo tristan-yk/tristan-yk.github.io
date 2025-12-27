@@ -26,7 +26,7 @@
 
 .articles-toggle:hover,
 .articles-toggle:focus-visible {
-  background: color-mix(in srgb, var(--page-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
   color: var(--bg);
 }
@@ -85,7 +85,7 @@
 
 .post-link:hover,
 .post-link:focus-visible {
-  background: color-mix(in srgb, var(--page-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
   color: var(--bg);
 }
@@ -118,7 +118,7 @@
 
 .post-link.active:hover,
 .post-link.active:focus-visible {
-  background: color-mix(in srgb, var(--page-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
   color: var(--bg);
 }
@@ -262,7 +262,7 @@
 
 .article-nav-link:hover,
 .article-nav-link:focus-visible {
-  background: color-mix(in srgb, var(--page-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
   color: var(--bg);
 }
