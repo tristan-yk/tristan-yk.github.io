@@ -272,6 +272,12 @@
   pointer-events: none;
 }
 
+/* Slightly stronger default outline on blog buttons (unhovered) */
+body.page-blog .articles-toggle,
+body.page-blog .article-nav-link {
+  border-color: color-mix(in srgb, var(--page-accent) 55%, transparent);
+}
+
 .meta-sep {
   color: var(--muted);
 }

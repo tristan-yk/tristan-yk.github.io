@@ -321,12 +321,27 @@ a:focus-visible {
 }
 
 /* About page card truncation */
-body.page-about .cards .card p {
+body.page-about .cards .card .card-preview {
   display: -webkit-box;
-  line-clamp: 3;
-  -webkit-line-clamp: 3;
+  line-clamp: 4;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+body.page-about .cards .card .card-detail {
+  display: none;
+}
+
+/* Disable link clicks in grid cards; allow in modal */
+body.page-about .cards .card a {
+  pointer-events: none;
+  cursor: default;
+}
+
+body.page-about .card-modal a {
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
@@ -477,12 +492,20 @@ body.page-about .cards .card p {
   background: transparent;
 }
 
+.card-modal-dialog .card h3 {
+  margin-bottom: 6px;
+}
+
 .card-modal-dialog .card p {
   display: block;
   line-clamp: unset;
   -webkit-line-clamp: unset;
   -webkit-box-orient: unset;
   overflow: visible;
+}
+
+.card-modal-dialog .card .card-detail {
+  display: block;
 }
 
 .btn.btn-secondary {
