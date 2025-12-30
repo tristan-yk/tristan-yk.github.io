@@ -19,7 +19,7 @@
   --accent-blog: #d6c6f0;
   --accent-blog-soft: rgba(214, 198, 240, 0.26);
   --accent-blog-strong: #e3d7f7;
-  --hover-fill-strength: 70%;
+  --hover-fill-strength: 18%;
 }
 
 /* Page themes */
@@ -33,21 +33,21 @@ body.page-about {
   --page-accent: #9ddcc7;           /* aquamarine green */
   --page-accent-soft: rgba(157, 220, 199, 0.26);
   --page-accent-strong: #b7e6d6;
-  --hover-fill-strength: 78%;
+  --hover-fill-strength: 18%;
 }
 
 body.page-resume {
   --page-accent: #fff9c4;           /* bright yellow */
   --page-accent-soft: rgba(255, 249, 196, 0.5);
   --page-accent-strong: #fffde7;
-  --hover-fill-strength: 78%;
+  --hover-fill-strength: 18%;
 }
 
 body.page-blog {
-  --page-accent: #d6c6f0;           /* lavender */
+  --page-accent: #e4d4ff;           /* lavender */
   --page-accent-soft: rgba(214, 198, 240, 0.26);
   --page-accent-strong: #e3d7f7;
-  --hover-fill-strength: 78%;
+  --hover-fill-strength: 18%;
 }
 
 * {
@@ -132,24 +132,16 @@ body.page-blog header {
 }
 
 .top-nav a:hover,
-.top-nav a:focus-visible {
-  color: var(--bg);
-  background: color-mix(in srgb, var(--nav-accent) var(--hover-fill-strength), transparent);
-  border-color: color-mix(in srgb, var(--nav-accent) 60%, transparent);
-}
-
-.top-nav a.active {
-  border-color: var(--nav-accent);
-  background: color-mix(in srgb, var(--nav-accent) 18%, transparent);
-  color: var(--fg);
-}
-
+.top-nav a:focus-visible,
 .top-nav a.active:hover,
-.top-nav a.active:focus-visible {
+.top-nav a.active:focus-visible,
+.top-nav a.active {
+  color: var(--fg);
   background: color-mix(in srgb, var(--nav-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--nav-accent) 60%, transparent);
-  color: var(--bg);
 }
+
+
 
 .top-nav a.nav-home {
   --nav-accent: var(--accent-home);
@@ -282,28 +274,28 @@ a:focus-visible {
 .card-active {
   background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
-  color: var(--bg);
+  color: var(--fg);
 }
 
 .card-active h3,
 .card-active p,
 .card-active li,
 .card-active .card-meta {
-  color: var(--bg);
+  color: var(--fg);
 }
 
 @media (hover: hover) {
   .card-clickable:hover {
     background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
     border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
-    color: var(--bg);
+    color: var(--fg);
   }
 
   .card-clickable:hover h3,
   .card-clickable:hover p,
   .card-clickable:hover li,
   .card-clickable:hover .card-meta {
-    color: var(--bg);
+    color: var(--fg);
   }
 }
 
@@ -337,6 +329,12 @@ body.page-about .cards .card .card-detail {
 body.page-about .cards .card a {
   pointer-events: none;
   cursor: default;
+}
+
+/* Ensure ellipsis inherits hover text color in grid */
+body.page-about .cards .card:hover a,
+body.page-about .cards .card.card-active a {
+  color: var(--fg) !important;
 }
 
 body.page-about .card-modal a {
@@ -456,7 +454,7 @@ body.page-about .card-modal a {
 .btn:focus-visible {
   background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
-  color: var(--bg);
+  color: var(--fg);
 }
 
 /* Card modal */
@@ -518,7 +516,7 @@ body.page-about .card-modal a {
 .btn.btn-secondary:focus-visible {
   background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
-  color: var(--bg);
+  color: var(--fg);
 }
 
 /* Legacy inline PDF embed (if you ever use <iframe>) */
@@ -526,7 +524,7 @@ body.page-about .card-modal a {
   width: 100%;
   border: none;
   border-radius: 0;
-  background: var(--bg);
+  background: var(--fg);
   display: block;
 }
 

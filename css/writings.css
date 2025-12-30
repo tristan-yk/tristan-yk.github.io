@@ -28,7 +28,7 @@
 .articles-toggle:focus-visible {
   background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
-  color: var(--bg);
+  color: var(--fg);
 }
 
 .blog-layout {
@@ -87,7 +87,7 @@
 .post-link:focus-visible {
   background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
-  color: var(--bg);
+  color: var(--fg);
 }
 
 .post-link .title {
@@ -107,25 +107,26 @@
 
 .post-link:hover .meta,
 .post-link:focus-visible .meta {
-  color: var(--bg);
+  color: var(--fg);
 }
 
 .post-link.active {
   font-weight: 700;
   border-color: var(--page-accent);
-  background: var(--page-accent-soft);
+  background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
 }
 
+.post-link.active,
 .post-link.active:hover,
 .post-link.active:focus-visible {
   background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
-  color: var(--bg);
+  color: var(--fg);
 }
 
 .post-link.active:hover .meta,
 .post-link.active:focus-visible .meta {
-  color: var(--bg);
+  color: var(--fg);
 }
 
 .blog-content {
@@ -264,7 +265,7 @@
 .article-nav-link:focus-visible {
   background: color-mix(in srgb, var(--page-accent) var(--hover-fill-strength), transparent);
   border-color: color-mix(in srgb, var(--page-accent) 60%, transparent);
-  color: var(--bg);
+  color: var(--fg);
 }
 
 .article-nav-link[aria-disabled="true"] {
