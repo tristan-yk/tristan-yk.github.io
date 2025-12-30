@@ -8,12 +8,6 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/resume.css" />
   <link rel="icon" type="image/png" href="thumb.png" />
-  <style>
-    .link-overlay {
-        outline: 2px solid red;
-        background: rgba(255, 0, 0, 0.15);
-    }
-  </style>
 </head>
 
 <body class="page-resume">
@@ -32,9 +26,11 @@
         <a class="btn" href="resume.pdf" download>Download PDF</a>
         <a class="btn btn-secondary" href="resume.pdf" target="_blank" rel="noopener">Open as PDF</a>
       </div>
+
       <p id="pdf-fallback" style="display:none;">Resume failed to load.</p>
       <div id="pdf-container"></div>
     </main>
+
     <footer>
       <p class="footer-text">&copy; 2025 Tristan Yan-Klassen</p>
     </footer>
@@ -46,25 +42,28 @@
     const PDF_PATH = "./resume.pdf";
     const MAX_WIDTH = 880;
 
-    /* ============================
-       MANUAL LINK OVERLAYS (FINAL)
-       ============================ */
+    // Render speed/quality knob: cap DPR to reduce uncached load time
+    const DPR_CAP = 1.25;
+
+    // Manual link overlays in PDF coordinates (points)
+    // Add/edit entries here to create clickable areas that scale with the rendered PDF.
     const LINK_OVERLAYS = [
-      {
-        page: 1,
-        url: "mailto:tyanklas@uwaterloo.ca",
-        rect: [199, 716, 308, 732],
-      },
-      {
-        page: 1,
-        url: "https://tristan-yk.github.io/",
-        rect: [314, 716, 405, 732],
-      },
-      {
-        page: 1,
-        url: "https://linkedin.com/in/tristanyanklassen",
-        rect: [410, 716, 510, 732],
-      },
+      { page: 1, url: "mailto:tyanklas@uwaterloo.ca", rect: [199, 723, 308, 739] },
+      { page: 1, url: "https://tristan-yk.github.io/", rect: [314, 723, 405, 739] },
+      { page: 1, url: "https://linkedin.com/in/tristanyanklassen", rect: [411, 723, 511, 739] },
+
+      { page: 2, url: "mailto:tyanklas@uwaterloo.ca", rect: [182, 723, 307, 739] },
+      { page: 2, url: "https://tristan-yk.github.io/", rect: [316, 723, 418, 739] },
+      { page: 2, url: "https://linkedin.com/in/tristanyanklassen", rect: [427, 723, 536, 739] },
+
+      { page: 3, url: "https://www.youtube.com/watch?v=hY5D-x-vRBs", rect: [297, 505, 434, 492] },
+      { page: 3, url: "https://github.com/tristan-yk/dead-reckoning", rect: [222, 92.9, 265.8, 78.3] },
+
+      { page: 4, url: "https://github.com/waterloo-rocketry/closedrocket", rect: [185.8, 339.5, 263, 324.9] },
+
+      { page: 5, url: "https://github.com/tristan-yk/TeamAphelionCansat", rect: [186.5, 61.9, 256.1, 48] },
+
+      { page: 6, url: "https://github.com/tristan-yk/Aroma", rect: [229.6, 524.4, 272.1, 513.3] },
     ];
 
     const container = document.getElementById("pdf-container");
@@ -80,10 +79,8 @@
     }
 
     function getRenderWidth() {
-      return Math.min(
-        document.querySelector(".page")?.clientWidth ?? window.innerWidth,
-        MAX_WIDTH
-      );
+      const pageEl = document.querySelector(".page");
+      return Math.min(pageEl?.clientWidth ?? window.innerWidth, MAX_WIDTH);
     }
 
     function pdfRectToCss(viewport, rect) {
@@ -100,24 +97,27 @@
     }
 
     function addLinkOverlays(pageWrap, viewport, pageNum) {
-      LINK_OVERLAYS
-        .filter(o => o.page === pageNum)
-        .forEach(o => {
-          const css = pdfRectToCss(viewport, o.rect);
+      for (const o of LINK_OVERLAYS) {
+        if (o.page !== pageNum) continue;
 
-          const a = document.createElement("a");
-          a.className = "link-overlay";
-          a.href = o.url;
-          a.target = "_blank";
-          a.rel = "noopener";
+        const css = pdfRectToCss(viewport, o.rect);
 
-          a.style.left = `${css.left}px`;
-          a.style.top = `${css.top}px`;
-          a.style.width = `${css.width}px`;
-          a.style.height = `${css.height}px`;
+        const a = document.createElement("a");
+        a.href = o.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.style.position = "absolute";
+        a.style.zIndex = "10";
+        a.style.left = `${css.left}px`;
+        a.style.top = `${css.top}px`;
+        a.style.width = `${css.width}px`;
+        a.style.height = `${css.height}px`;
 
-          pageWrap.appendChild(a);
-        });
+        // Keep clickable, but invisible
+        a.style.background = "transparent";
+
+        pageWrap.appendChild(a);
+      }
     }
 
     async function render() {
@@ -127,14 +127,14 @@
         container.innerHTML = "";
         fallback.style.display = "none";
 
-        const dpr = window.devicePixelRatio || 1;
+        const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
         const renderWidth = getRenderWidth();
 
         for (let n = 1; n <= pdf.numPages; n++) {
           const page = await pdf.getPage(n);
           const unscaled = page.getViewport({ scale: 1 });
 
-          // Integer CSS sizing to avoid seams
+          // Integer CSS sizing to reduce seams
           const scale0 = renderWidth / unscaled.width;
           const cssW = Math.round(unscaled.width * scale0);
           const cssH = Math.round(unscaled.height * scale0);
@@ -145,12 +145,13 @@
 
           const pageWrap = document.createElement("div");
           pageWrap.className = "pdf-page";
+          pageWrap.style.position = "relative";
           pageWrap.style.width = `${cssW}px`;
           pageWrap.style.height = `${cssH}px`;
           container.appendChild(pageWrap);
 
           const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d", { alpha: false });
+          const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
 
           canvas.width = Math.floor(renderViewport.width);
           canvas.height = Math.floor(renderViewport.height);
@@ -163,10 +164,7 @@
 
           pageWrap.appendChild(canvas);
 
-          await page.render({
-            canvasContext: ctx,
-            viewport: renderViewport
-          }).promise;
+          await page.render({ canvasContext: ctx, viewport: renderViewport }).promise;
 
           addLinkOverlays(pageWrap, viewport, n);
         }
