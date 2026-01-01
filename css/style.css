@@ -171,7 +171,14 @@ body.page-blog header {
 main {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 18px;
+}
+
+body.page-about main {
+  gap: 24px;
+}
+main > section:first-of-type {
+  padding-top: 24px;
 }
 
 .page-title {
@@ -198,8 +205,13 @@ main {
 
 /* Sections */
 section {
-  padding: 18px 0;
+  padding: 0;
   border-bottom: 1px solid var(--border);
+}
+
+/* Remove trailing margins so inter-section gap stays consistent */
+section > *:last-child {
+  margin-bottom: 0;
 }
 
 section:last-of-type {
@@ -208,18 +220,17 @@ section:last-of-type {
 
 /* Align first section spacing on About with other pages */
 body.page-about main > section:first-of-type {
-  padding-top: 0;
+  padding-top: 18px;
 }
 
 .section {
-  padding: 18px 0;
+  padding: 0;
 }
 
 h2 {
-  font-size: 1.15rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+  color: var(--fg);
   margin-bottom: 10px;
 }
 
@@ -229,6 +240,7 @@ li {
 }
 
 p {
+  margin-top: 0;
   margin-bottom: 10px;
 }
 
