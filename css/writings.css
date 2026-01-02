@@ -297,8 +297,8 @@ body.page-blog .article-nav-link {
     top: auto;
     left: auto;
     width: 100%;
-    height: 40vh;
-    max-height: 40vh;
+    height: auto;
+    max-height: 40vh; /* cap size, but let it shrink to content */
     padding: 16px;
     margin-bottom: 12px;
     transform: none;
