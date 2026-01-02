@@ -40,6 +40,7 @@ function formatDate(iso) {
     year: "numeric",
     month: "short",
     day: "numeric",
+    timeZone: "UTC", // keep calendar date stable regardless of viewer timezone
   });
 }
 
