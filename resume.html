@@ -42,8 +42,9 @@
     const PDF_PATH = "./resume.pdf";
     const MAX_WIDTH = 880;
 
-    // Render speed/quality knob: cap DPR to reduce uncached load time
-    const DPR_CAP = 1.25;
+    // Render quality knob:
+    // - Use higher cap for sharper text, but avoid insane canvas sizes on ultra-high-DPR devices.
+    const DPR_CAP = 3.0;
 
     // Manual link overlays in PDF coordinates (points)
     // Add/edit entries here to create clickable areas that scale with the rendered PDF.
@@ -120,9 +121,16 @@
       }
     }
 
+    let renderToken = 0;
+
     async function render() {
+      const token = ++renderToken;
+
       try {
         const pdf = await pdfjsLib.getDocument(PDF_PATH).promise;
+
+        // If a newer render started while we were loading, abandon this one.
+        if (token !== renderToken) return;
 
         container.innerHTML = "";
         fallback.style.display = "none";
@@ -131,7 +139,11 @@
         const renderWidth = getRenderWidth();
 
         for (let n = 1; n <= pdf.numPages; n++) {
+          // If a newer render started, stop work early.
+          if (token !== renderToken) return;
+
           const page = await pdf.getPage(n);
+
           const unscaled = page.getViewport({ scale: 1 });
 
           // Integer CSS sizing to reduce seams
@@ -166,6 +178,7 @@
 
           await page.render({ canvasContext: ctx, viewport: renderViewport }).promise;
 
+          // Add overlays based on CSS-sized viewport (not DPR-scaled viewport)
           addLinkOverlays(pageWrap, viewport, n);
         }
       } catch (err) {
@@ -173,8 +186,25 @@
       }
     }
 
+    // Initial render
     render();
-    window.addEventListener("resize", () => location.reload());
+
+    // Mobile fix:
+    // On phones, fast scrolling can trigger "resize" when the browser UI shows/hides.
+    // Only re-render when the *layout width* actually changes (rotation, split view, etc.).
+    let lastW = window.innerWidth;
+    let resizeTimer = null;
+
+    window.addEventListener("resize", () => {
+      const w = window.innerWidth;
+      if (w === lastW) return; // ignore height-only resizes (scroll UI)
+      lastW = w;
+
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        render();
+      }, 150);
+    });
   </script>
 </body>
 </html>
