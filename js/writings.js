@@ -44,6 +44,14 @@ function formatDate(iso) {
   });
 }
 
+function formatArticleDate(post) {
+  const posted = formatDate(post.date);
+  if (post.dateEdited) {
+    return `${posted}<br><em>Edited ${formatDate(post.dateEdited)}</em>`;
+  }
+  return posted;
+}
+
 function closeDrawer() {
   els.drawer.classList.remove("open");
   els.drawerBackdrop.classList.remove("active");
@@ -151,7 +159,7 @@ async function loadPost(slug) {
     const source = doc.querySelector("article") || doc.body;
 
     els.articleTitle.textContent = target.title;
-    els.articleDate.textContent = formatDate(target.date);
+    els.articleDate.innerHTML = formatArticleDate(target);
 
     els.articleBody.innerHTML = "";
     Array.from(source.children).forEach((node) => {
