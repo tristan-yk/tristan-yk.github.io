@@ -209,16 +209,6 @@
       }, 150);
     });
 
-    // Gag: flip the Resume nav label on this page only.
-    const resumeLink = document.querySelector(".nav-resume");
-    if (resumeLink) {
-      resumeLink.textContent = "Pause";
-      resumeLink.addEventListener("click", (event) => {
-        event.preventDefault();
-        resumeLink.textContent =
-          resumeLink.textContent.trim().toLowerCase() === "pause" ? "Resume" : "Pause";
-      });
-    }
   </script>
 </body>
 </html>
