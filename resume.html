@@ -8,14 +8,6 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/resume.css" />
   <link rel="icon" type="image/png" href="thumb.png" />
-  <style>
-  /* === DEBUG: show PDF link hitboxes === */
-  .pdf-page a {
-    outline: 2px solid red;
-    background: rgba(255, 0, 0, 0.15);
-    pointer-events: auto;
-  }
-</style>
 </head>
 
 <body class="page-resume">
@@ -34,6 +26,7 @@
         <a class="btn" href="resume.pdf" download>Download PDF</a>
         <a class="btn btn-secondary" href="resume.pdf" target="_blank" rel="noopener">Open as PDF</a>
       </div>
+      <p class="mobile-resume-note">For smoother mobile viewing, please open or download the PDF.</p>
 
       <p id="pdf-fallback" style="display:none;">Resume failed to load.</p>
       <div id="pdf-container"></div>
@@ -215,6 +208,17 @@
         render();
       }, 150);
     });
+
+    // Gag: flip the Resume nav label on this page only.
+    const resumeLink = document.querySelector(".nav-resume");
+    if (resumeLink) {
+      resumeLink.textContent = "Pause";
+      resumeLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        resumeLink.textContent =
+          resumeLink.textContent.trim().toLowerCase() === "pause" ? "Resume" : "Pause";
+      });
+    }
   </script>
 </body>
 </html>

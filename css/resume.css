@@ -13,6 +13,20 @@ canvas {
   box-shadow: none;
 }
 
+.mobile-resume-note {
+  display: none;
+  margin: 2px 0 6px;
+  font-size: inherit;
+  color: var(--fg);
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .mobile-resume-note {
+    display: block;
+  }
+}
+
 /* Invisible clickable link overlays */
 .link-overlay {
   position: absolute;
