@@ -8,6 +8,14 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/resume.css" />
   <link rel="icon" type="image/png" href="thumb.png" />
+  <style>
+  /* === DEBUG: show PDF link hitboxes === */
+  .pdf-page a {
+    outline: 2px solid red;
+    background: rgba(255, 0, 0, 0.15);
+    pointer-events: auto;
+  }
+</style>
 </head>
 
 <body class="page-resume">
@@ -49,16 +57,18 @@
     // Manual link overlays in PDF coordinates (points)
     // Add/edit entries here to create clickable areas that scale with the rendered PDF.
     const LINK_OVERLAYS = [
-      { page: 1, url: "mailto:tyanklas@uwaterloo.ca", rect: [199, 723, 308, 739] },
-      { page: 1, url: "https://tristan-yk.github.io/", rect: [314, 723, 405, 739] },
-      { page: 1, url: "https://linkedin.com/in/tristanyanklassen", rect: [411, 723, 511, 739] },
+      { page: 1, url: "mailto:tyanklas@uwaterloo.ca", rect: [95, 723, 204, 739] },
+      { page: 1, url: "https://tristan-yk.github.io/", rect: [211, 723, 300, 739] },
+      { page: 1, url: "https://github.com/tristan-yk", rect: [307, 723, 410, 739] },
+      { page: 1, url: "https://linkedin.com/in/tristanyanklassen", rect: [417, 723, 516, 739] },
 
-      { page: 2, url: "mailto:tyanklas@uwaterloo.ca", rect: [182, 723, 307, 739] },
-      { page: 2, url: "https://tristan-yk.github.io/", rect: [316, 723, 418, 739] },
-      { page: 2, url: "https://linkedin.com/in/tristanyanklassen", rect: [427, 723, 536, 739] },
+      { page: 2, url: "mailto:tyanklas@uwaterloo.ca", rect: [67, 723, 193, 739] },
+      { page: 2, url: "https://tristan-yk.github.io/", rect: [201, 723, 303, 739] },
+      { page: 2, url: "https://github.com/tristan-yk", rect: [312, 723, 427, 739] },
+      { page: 2, url: "https://linkedin.com/in/tristanyanklassen", rect: [437, 723, 546, 739] },
 
       { page: 3, url: "https://www.youtube.com/watch?v=hY5D-x-vRBs", rect: [297, 505, 434, 492] },
-      { page: 3, url: "https://github.com/tristan-yk/dead-reckoning", rect: [222, 92.9, 265.8, 78.3] },
+      { page: 3, url: "https://github.com/tristan-yk/dead-reckoning", rect: [222, 85, 265.8, 72] },
 
       { page: 4, url: "https://github.com/waterloo-rocketry/closedrocket", rect: [185.8, 339.5, 263, 324.9] },
 
